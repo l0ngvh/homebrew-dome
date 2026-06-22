@@ -1,9 +1,8 @@
 cask "dome" do
-  arch arm: "aarch64-apple-darwin", intel: "x86_64-apple-darwin"
+  arch arm: "aarch64-apple-darwin"
 
   version "0.1.0"
-  sha256 arm:   "PLACEHOLDER_AARCH64_SHA256",
-         intel: "PLACEHOLDER_X86_64_SHA256"
+  sha256 arm: "PLACEHOLDER_AARCH64_SHA256"
 
   url "https://github.com/l0ngvh/dome/releases/download/v#{version}/dome-#{version}-#{arch}.dmg"
   name "Dome"

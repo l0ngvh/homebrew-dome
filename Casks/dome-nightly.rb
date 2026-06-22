@@ -1,5 +1,5 @@
 cask "dome-nightly" do
-  arch arm: "aarch64-apple-darwin", intel: "x86_64-apple-darwin"
+  arch arm: "aarch64-apple-darwin"
 
   version "nightly"
   sha256 :no_check
