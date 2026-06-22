@@ -1,0 +1,37 @@
+name: Update Cask
+
+on:
+  repository_dispatch:
+    types: [new-release]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update cask version and SHA256s
+        run: |
+          VERSION="${{ github.event.client_payload.version }}"
+          SHA_AARCH64="${{ github.event.client_payload.sha_aarch64_dmg }}"
+          SHA_X86_64="${{ github.event.client_payload.sha_x86_64_dmg }}"
+
+          sed -i "s/version \".*\"/version \"$VERSION\"/" Casks/dome.rb
+          sed -i "s/sha256 arm:.*/sha256 arm:   \"$SHA_AARCH64\",/" Casks/dome.rb
+          sed -i "s/^         intel:.*/         intel: \"$SHA_X86_64\"/" Casks/dome.rb
+
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update dome to v${{ github.event.client_payload.version }}"
+          branch: update-dome-${{ github.event.client_payload.version }}
+          title: "Update Dome to v${{ github.event.client_payload.version }}"
+          body: |
+            Automated update from [Dome release v${{ github.event.client_payload.version }}](https://github.com/l0ngvh/dome/releases/tag/v${{ github.event.client_payload.version }}).
+
+            - Version: ${{ github.event.client_payload.version }}
+            - aarch64 SHA256: ${{ github.event.client_payload.sha_aarch64_dmg }}
+            - x86_64 SHA256: ${{ github.event.client_payload.sha_x86_64_dmg }}
