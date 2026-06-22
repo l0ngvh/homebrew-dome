@@ -1,0 +1,27 @@
+name: Update Cask
+
+on:
+  repository_dispatch:
+    types: [new-release]
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update cask SHA256
+        run: |
+          SHA_AARCH64="${{ github.event.client_payload.sha_aarch64_dmg }}"
+
+          sed -i "s/sha256 :no_check/sha256 arm:   \"$SHA_AARCH64\"/" Casks/dome-nightly.rb
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/dome-nightly.rb
+          git commit -m "chore: update dome-nightly"
+          git push
