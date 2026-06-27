@@ -16,7 +16,7 @@ jobs:
         run: |
           SHA_AARCH64="${{ github.event.client_payload.sha_aarch64_dmg }}"
 
-          sed -i "s/sha256 :no_check/sha256 arm:   \"$SHA_AARCH64\"/" Casks/dome-nightly.rb
+          sed -i "s/^  sha256.*/  sha256 arm:   \"$SHA_AARCH64\"/" Casks/dome-nightly.rb
 
       - name: Commit and push
         run: |
