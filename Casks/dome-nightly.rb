@@ -2,7 +2,7 @@ cask "dome-nightly" do
   arch arm: "aarch64-apple-darwin"
 
   version "nightly"
-  sha256 arm:   "cb7d35e1bca9e87dddd6893bcc11dbee60ed7d575dd4d59a38c22454acd245cf"
+  sha256 arm:   "1a3d841a034a77a86d04a723e1f3489e5b73ae14710ff6a35e79fb3f98b33132"
 
   url "https://github.com/l0ngvh/dome/releases/download/nightly/dome-nightly-#{arch}.dmg"
   name "Dome (Nightly)"
