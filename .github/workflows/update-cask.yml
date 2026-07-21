@@ -2,7 +2,7 @@ name: Update Cask
 
 on:
   repository_dispatch:
-    types: [new-release]
+    types: [new-nightly-release]
 
 jobs:
   update:
@@ -12,16 +12,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Update cask SHA256
+      - name: Update cask
+        env:
+          VERSION:     ${{ github.event.client_payload.version }}
+          SHA_AARCH64: ${{ github.event.client_payload.sha_aarch64_dmg }}
         run: |
-          SHA_AARCH64="${{ github.event.client_payload.sha_aarch64_dmg }}"
-
-          sed -i "s/^  sha256.*/  sha256 arm:   \"$SHA_AARCH64\"/" Casks/dome-nightly.rb
+          set -euo pipefail
+          sed -i "s/^  version .*/  version \"$VERSION\"/" Casks/dome-nightly.rb
+          sed -i "s/^  sha256 arm:.*/  sha256 arm:   \"$SHA_AARCH64\"/" Casks/dome-nightly.rb
 
       - name: Commit and push
+        env:
+          VERSION: ${{ github.event.client_payload.version }}
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add Casks/dome-nightly.rb
-          git commit -m "chore: update dome-nightly"
+          git commit -m "chore: bump dome-nightly to $VERSION"
           git push
