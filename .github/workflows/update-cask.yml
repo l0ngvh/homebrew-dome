@@ -18,6 +18,10 @@ jobs:
           SHA_AARCH64: ${{ github.event.client_payload.sha_aarch64_dmg }}
         run: |
           set -euo pipefail
+          if [ -z "$VERSION" ] || [ -z "$SHA_AARCH64" ]; then
+            echo "::error::dispatch payload is missing version or sha_aarch64_dmg"
+            exit 1
+          fi
           sed -i "s/^  version .*/  version \"$VERSION\"/" Casks/dome-nightly.rb
           sed -i "s/^  sha256 arm:.*/  sha256 arm:   \"$SHA_AARCH64\"/" Casks/dome-nightly.rb
 
